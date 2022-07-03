@@ -1,9 +1,7 @@
-#### Relative Animation Proposal
+# Relative Animation Proposal
 
 
-## Overview
-
-# Introduction
+## Introduction
 
 Relative animation is an animation usage pattern built on additive animation
 now in part possible on the web using Web-Animations.
@@ -28,7 +26,7 @@ Blending of keyframe animation gives rise to simple emergent physics
 outperforming a more "real" but main thread bound physics sim.
 The pattern is best suited for user interface animation triggered by interaction and events.
 
-# History
+### History
 
 It was initially conceived as a Core Animation usage pattern for animating laid out glyph runs and inline grid content.
 Bug reports and feature request radars,
@@ -83,11 +81,11 @@ unlike other techniques for spring animation, do not need to be bound to the mai
 Designing transient animations from discrete base state instead of having to deal with current animated values,
 to use an old cliche, makes things easier to reason about.
 
-# What is possible on the web
+### What is possible on the web
 
 Web-Animations brings the `add` and `accumlate` composite modes which open many possibilities, but have to be manually created.
 
-# What is not possible on the web
+### What is not possible on the web
 
 The feature requests in this proposal notwithstanding,
 another hurdle is the lack of avilability of discrete, non-animated metrics.
@@ -95,7 +93,7 @@ Functions like `getBoundingClientRect` return animated values only.
 Admittedly, sibling element position can be animated using offsetLeft and offsetTop,
 but would become more complicated when reparenting.
 
-# What could be possible on the web
+### What could be possible on the web
 
 It could make possible an arguably superior solution to transition reversal than the current implementation.
 [https://www.w3.org/TR/css-transitions/#reversing]
@@ -105,7 +103,7 @@ because fewer style recalculations are needed if only discrete non-animated valu
 
 
 
-# A simple example
+### A simple example
 
 To explain how to manually construct a relative animation by example,
 animating from 2 to 10 would be accomplished by having the specified value instantly set to 10,
@@ -119,7 +117,7 @@ The discrete base value would be instantly changed from 10 to 1,
 which when summed with both animations would remain visualy consistent.
 If a nice easing is used, the change in direction would be seamless, smooth, and beautiful.
 
-# Easing is pretty much required
+### Easing is pretty much required
 
 When considering the same simplified example but using a linear timing function instead,
 its behavior would look erroneous.
@@ -136,7 +134,7 @@ added on top of the base value of 1,
 resulting in the apparent motion from 7 to 1.
 
 
-# Emergent Physics
+### Emergent Physics
 
 Limited spring physics can be emulated using keyframes.
 Additive animation is not a requirement for this.
@@ -156,7 +154,7 @@ equal and opposite animations should be added, instead of removed.
 
 
 
-# How this is different
+### How this is different
 
 This pattern differs from previous intended uses of additve animation in that animations counterintuitively end at zero.
 When complete, animations can be removed without further action because they no longer have any effect.
@@ -175,7 +173,7 @@ The relative pattern obviates fill modes, for both layout and interruption.
 They and their memory leaks should now be considered an anti-pattern.
 
 
-# Benefits
+### Benefits
 
 Animation behavior is a superior way to handle interruption of an in-progress animation.
 This has consequenses from simple interactions to more complex animations,
@@ -196,7 +194,7 @@ In other words, more easy to reason about.
 
 
 
-# Don't call it FLIP
+### Don't call it FLIP
 
 The primary (only?) benefit of non-additive FLIP is not needing animation completion handlers to reset transform animations.
 FLIP only works with non-additive transform animations because element frame is determined by layout,
@@ -209,7 +207,7 @@ Yes of course it was a fantastic implementation, my hat is off to Paul Lewis.
 
 
 
-# Failures of the pattern
+### Failures of the pattern
 
 "Spooky animation at a distance" is a phrase coined to describe curious artifacts when a stagger animation is interrupted.
 [https://twitter.com/KvnDy/status/741727269228544000]
@@ -242,9 +240,9 @@ This is not implemented in D46887. Watch out for memory leaks. No don't, this wi
 
 
 
-### The Request quick rundown
+## The Request quick rundown
 
-## Essential features that have a proof-of-concept implementation in an unlanded Firefox Nightly patch
+### Essential features that have a proof-of-concept implementation in an unlanded Firefox Nightly patch
 * A `subtraction` procedure to convert values from absolute to relative.
 * A `relative` CompositeOperation for Web-Animations which behaves like `accumulate` for lists but with automatic conversion from absolute to relative values.
 * A `transition-composition` property which takes the keywords `replace` (the default) or `relative`.
@@ -253,35 +251,35 @@ This is not implemented in D46887. Watch out for memory leaks. No don't, this wi
 * A `discrete-metrics` CSS property that takes the keywords `none` (the default), `mixed`, or `strict`.
 
 
-## Additional features that I haven't thought much of yet:
+### Additional features that I haven't thought much of yet:
 * Relative animation for certain motion-path properties
 
-## Lower-priority features for `transition-interrupt` : `special`
+### Lower-priority features for `transition-interrupt` : `special`
 * A default timing function of `cubic-bezier(0.5, 0, 0.5, 1)` or `perfect`.
 This may be difficult to fit in the spec and codebase, and might not gain enthusiastic support, like adding new color names.
 
-## Lower-priority features for `animation-composite` : `relative`
+### Lower-priority features for `animation-composite` : `relative`
 * Use of a single timing function spanning all CSS Animation keyframes.
 
-## Lower-priority features for `animation-composite` : `relative`
+### Lower-priority features for `animation-composite` : `relative`
 * A default fill mode of `backwards` when run forward or `forwards` when run in reverse (to prevent flicker)
 
 ## Features which should be considered for implementation but are not fully realized yet:
-# It should be possible to:
+### It should be possible to:
 * Prevent animations and transitions from affecting inherited values, so elements inherit specified rather than computed animated values.
 * Prevent animations and transitions from affecting intrinsic sizing, or contribute specified rather than computed animated values.
 * Prevent animations and transitions from affecting scrollable overflow, or contribute specified rather than computed animated values.
 * Use destination values rather than computed animated values when performing hit testing.
 * Ensure that elements positioned off-screen due to animation are not occluded.
 
-# In addition, it might make sense if it were easier to
+### In addition, it might make sense if it were easier to
 * Distinguish between animated and non-animated computed values in the spec.
 [https://www.w3.org/TR/css-cascade-4/#value-stages]
 It may be complicated already, but this means a `discrete value` as well as a `computed value`
-# Plus:
+### Plus:
 * A better easing spec could allow for push animations, which provide a solution to dragging animation latency
 
-## Outlandish features that might fulfill an animator's wildest dreams
+### Outlandish features that might fulfill an animator's wildest dreams
 * An "Animated OM" for animating Javascript numbers and arrays of discrete objects.
 * A type of discrete object "fake set" animation for collections that applies a given sort function to its results
 
@@ -289,9 +287,9 @@ It may be complicated already, but this means a `discrete value` as well as a `c
 Many things remain unimplemented like the various motion-path properties, and there are many bugs in animating certain transforms.
 
 
-### Essential features that absolutely should be implemented
+## Essential features that absolutely should be implemented
 
-## A `relative` CompositeOperation for Web-Animations
+### A `relative` CompositeOperation for Web-Animations
 
 A `relative` CompositeOperation for Web-Animations behaves similarly to `accumulate` except automatically converts from absolute to relative values.
 Relative values refers to converting values from the old value minus the new value and animating to zero.
@@ -327,10 +325,10 @@ otherwise computed to begin where a previous animation left off
 
 
 
-# More specific implementation details
+### More specific implementation details
 Private subtract and public relative modes, relativeEndpoints, etc.
 
-# To be considered:
+### To be considered:
 The D46887 patch has issues related to transform matrices, lists, and CSS filters which need to be resolved.
 Does it build on the correct operation, should it be `add` or `accumulate`?
 Or does it need both?
@@ -338,7 +336,7 @@ Do there need to be separate modes similar to the distinction between `add` and 
 
 
 
-# Related:
+### Related:
 
 The additive CSS proposal is interesting but would not have a corresponding relative operation,
 because it applies to only one value, not old and new values to calculate a difference.
@@ -369,7 +367,7 @@ and source
 [https://codepen.io/kvndy/pen/RdGVvR]
 show its usage, and also will not work in any browsers.
 
-# Changing this value
+### Changing this value
 Switching from special to regular and vice versa requires additional effort.
 
 When switching from `regular` to `special`, the existing transition animation should not be replaced.
@@ -381,7 +379,7 @@ When switching from `special` to `regular` when there is only one in-progess tra
 When switching from `special` to `regular` when there are multiple in-progess transition animations, the from value of the new transition needs to be the composited value of all exisiting transitions.
 Then all of the running transition animations must be removed, instead of just one.
 
-# Faster reversing of interrupted transitions
+### Faster reversing of interrupted transitions
 [https://www.w3.org/TR/css-transitions-1/#reversing]
 should be entirely bypassed when `transition-interrupt` is`special`, with extra care taken when switching back and forth between it and `regular`.
 These reversal rules are somewhat convoluted and mercifully need only apply to a single transition.
@@ -419,7 +417,7 @@ https://drafts.csswg.org/cssom-view/#dom-element-getboundingclientrect
 
 
 
-## getDiscreteComputedStyle, getDiscreteBoundingClientRect, and getDiscreteClientRects
+### getDiscreteComputedStyle, getDiscreteBoundingClientRect, and getDiscreteClientRects
 The term could be "Unanimated" instead of "Discrete".
 This clumsily expands the API footprint.
 Worse, the implementation would be expensive.
@@ -431,7 +429,7 @@ that accepts a boolean and defaults to false.
 This would still be expensive.
 
 
-## Brutally Discrete
+### Brutally Discrete
 
 A radical proposition which radically changes behavior radically,
 this may have vast unforseen benefits and consequences.
@@ -454,7 +452,7 @@ That might not be true, it may be possible to animate, or a way could be propose
 
 
 
-## Better defaults for `transition-interrupt` and `animation-composite` : `relative`
+### Better defaults for `transition-interrupt` and `animation-composite` : `relative`
 
 The default timing function for `transition-interrupt` and `animation-composite` : `relative`
 should be `cubic-bezier(0.5, 0, 0.5, 1)`, or a new keyword `perfect` giving the equivalent, if possible.
@@ -466,7 +464,7 @@ More investigation is needed.
 
 
 
-## Use of a single timing function spanning all CSS Animation keyframes.
+### Use of a single timing function spanning all CSS Animation keyframes.
 Web-Animations allows use of a single timing function that applies to the entire iteration duration rather than keyframe-specific timing functions.
 The `relative` keyword of `animation-composition` should be overloaded to also permit this, exclusively if necessary.
 [https://www.w3.org/TR/web-animations-1/#the-effecttiming-dictionaries]
@@ -479,13 +477,13 @@ so the usefulness of this feature is debatable.
 
 
 
-### Not fully realized
+## Not fully realized
 
 This usage pattern might benefit from the following ambitious changes,
 which are not implemented in the experimental patch nor admittedly are their ramifications fully understood.
 One possibility to enable this mode is a new CSS property similar to `will-change` that takes a list
 
-# Prevent animations and transitions from supplying values for inheritance.
+### Prevent animations and transitions from supplying values for inheritance.
 https://www.w3.org/TR/css-cascade-3/#inheriting
 There would give a solution to the problem exposed by this example.
 [https://dbaron.org/css/test/2015/transition-starting-1]
@@ -529,24 +527,24 @@ An interesting test is in Nightly layout/style/test/test_transitions.html
 // after-transition style.
 
 
-# Prevent animations and transitions from contributing to intrinsic sizing.
+### Prevent animations and transitions from contributing to intrinsic sizing.
 https://www.w3.org/TR/css-sizing-3/#intrinsic
 It should be possible that an animated layout change of children would not continuously update the size of a parent containing element.
 Instead, the parent should instantly jump to a new size, using the destination values of the children.
 If the containing element is to be animated, explicitly or by transition, it should happen based on that instant change, in hopes to avoid any layout thrashing.
 
-# Prevent animations and transitions from contributing to scrollable overflow.
+### Prevent animations and transitions from contributing to scrollable overflow.
 https://www.w3.org/TR/css-overflow-3/#scrollable
 This is similar to the above but not just useful for relative animation.
 Traditional animation would also benefit from not producing or extending scroll bars when a spring or bounce animation extends a child beyond its parent's edges.
 This might require more granular control of the scroll bars, hopefully something exists, I'd rather not expand the API.
 
-# Use destination values rather than calculated animated values when performing hit testing.
+### Use destination values rather than calculated animated values when performing hit testing.
 I am not sure if and where in the spec this is defined, but this would also be beneficial to non-relative animation.
 Wobbly spring animations, when quickly toggled multiple times, can make elements move over top of others and potentially receive inadvertent clicks.
 This might also be a solution to annoying hover transition animations that get trapped bouncing between two states which are never able to settle.
 
-# Distinguish between animated and non-animated computed values in the spec.
+### Distinguish between animated and non-animated computed values in the spec.
 I do know it is important to be able to use discrete non-animated values throughout the platform, wherever possible,
 so animated interactions can designed and easily reasoned about.
 I am not sure if this is necessary, I just think it might be helpful, at least to me.
@@ -556,7 +554,7 @@ https://www.w3.org/TR/css-cascade-3/#value-stages
 
 
 
-## Relative animation for certain motion-path properties
+### Relative animation for certain motion-path properties
 There is plenty of discussion around different types.
 
 
@@ -581,9 +579,9 @@ It is not clear if it was needed because of a bug, but there was a visible discr
 
 
 
-### Wildest dreams
+## Wildest dreams
 
-# The Animated OM
+### The Animated OM
 It should be possible to animate objects in javascript using Web-Animations, instead of just values of CSS properties.
 A limited subset of Web-Animations could be exposed, along with some Javascript specific additions.
 The following is not well developed, and heavily influenced by Apple's Core Animation API.
@@ -625,7 +623,7 @@ If you wanted, `Object.animator(obj).types` could be enforced on `obj` in some c
 
 
 
-# A type of discrete animation for arrays of objects, and a way to pass a sort function, written in Javascript, where equal values establish identity not equality.
+### A type of discrete animation for arrays of objects, and a way to pass a sort function, written in Javascript, where equal values establish identity not equality.
 Relative animation of discrete types in a set or unsorted array, which would use a sort function provided to the animation.
 Or `Object.animator(obj).sort = { variable: function, foo: function, bar: function};` but only used on discrete types like `Set` and `Array`.
 Only if property type is array or set?
@@ -645,9 +643,9 @@ Like javascript objects, a way to sort would be needed, perhaps attributes on el
 
 
 
-### But wait there's more
+## But wait there's more
 
-# Advanced CSS Transitions & Animations Proposal
+### Advanced CSS Transitions & Animations Proposal
 
 The quite old and perhaps forgotten Advanced CSS Transitions & Animations Proposal
 [https://www.w3.org/Graphics/fx/wiki/Advanced_CSS_Transitions_%26_Animations_Proposal]
@@ -663,13 +661,13 @@ And maybe `destination()` could replace `to()` if need be.
 This would be beneficial for both types of transitions enabled by the proposed `transition-interrupt` values `regular` and `special`.
 This is not meant to be included in this proposal.
 
-### Conclusion
+## Conclusion
 
-# Anything else?
+### Anything else?
 There may be additional changes needed to benefit this pattern which have not been addressed or considered.
 Naming and feature bikeshedding or other comments and questions are encouraged and highly welcome.
 
-# Thanks!
+### Thanks!
 Let's usher in a new era of user interface animation for the web by implementing at least some of this proposal.
 
 
