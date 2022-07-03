@@ -558,10 +558,10 @@ https://www.w3.org/TR/css-cascade-3/#value-stages
 There is plenty of discussion around different types.
 
 
-### Features that for various reasons may not receive approval:
+## Features that for various reasons may not receive approval:
 
 
-## A `perfect` timing function that resolves to `cubic-bezier(0.5, 0, 0.5, 1)`.
+### A `perfect` timing function that resolves to `cubic-bezier(0.5, 0, 0.5, 1)`.
 
 A timing function, `perfect` that resolves to `cubic-bezier(0.5, 0, 0.5, 1)` would also belong to the "pit of success" category.
 Resistance to this might be similar to that of adding a new named color, which is explicitly mentioned... somewhere
